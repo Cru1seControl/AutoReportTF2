@@ -26,15 +26,6 @@ class getplayerstatus(object):
     def APIKey(self):
         return self.apiKey
 
-
-    def ImitateReport(self):
-        for driverToGet in driver.get("https://steamcommunity.com/id%s" % (self.MassReportVanityURL()[0])):
-            print(driverToGet)
-
-        pass
-
-
-
     def ShowVanityMatches(self, setCustomName=False):
         BotTypes = ["g0tb0t", "g0tb0tt", "g0tb6t", "g0tb7t", "g0tbot", "g0t", "g0tbottt"]
         BotExists = True
@@ -77,26 +68,6 @@ class getplayerstatus(object):
         contentTypes = {"Private": 0, "Offline": 0, "Online": 1, "Busy": 2, "Away": 3, "Snooze": 4, "Looking to Trade": 5, "Looking to Play": 6}
         pass
 
-    def IsPlayerVacBanned(self):
-        banned = False
-        pass
-
-    def GetFriendsList(self):
-        friendList = []
-        pass
-
-    def GetPlayerLevel(self):
-        PlayerLevelReferingUrl = ""
-        pass
-
-    def ReportSteamAccount(self):
-        #Required arguments :key, steamid, appid:
-
-        pass
-
-    def RequestPlayerGameBan(self):
-        pass
-
     def GetPlayerAvatar(self, displayImage=False):
         #ISteamUser developer api reference url
         AvatarRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
@@ -108,15 +79,3 @@ class getplayerstatus(object):
         if displayImage is True:
             Avatar = Image.open(io.BytesIO(requests.get(AvatarRefUrl).content))
             Avatar.show()
-
-def player_status_check(self):
-    pass
-
-
-#CheckSteamCheat = CheckSteamCheat("76561199050850901", apiKey="1C939844B2BF19E345DD1FC3BD83843E")
-
-#CheckSteamCheat.GetPlayerAvatar(False)
-
-#print(CheckSteamCheat.ResolveVanityUrl())
-
-#CheckSteamCheat.MassReportVanityURL()
