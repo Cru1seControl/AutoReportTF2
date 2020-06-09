@@ -60,14 +60,6 @@ class getplayerstatus(object):
         VanityResponse = json.dumps(json.loads(VanityRequest.content)["response"]["steamid"]).strip('\"')
         return int(VanityResponse)
 
-
-    def ProfileSettingType(self):
-        CanSeeContent = False
-
-        #0 - Offline, 1 - Online, 2 - Busy, 3 - Away, 4 - Snooze, 5 - looking to trade, 6 - looking to play. If the player's profile is private, this will always be "0"
-        contentTypes = {"Private": 0, "Offline": 0, "Online": 1, "Busy": 2, "Away": 3, "Snooze": 4, "Looking to Trade": 5, "Looking to Play": 6}
-        pass
-
     def GetPlayerAvatar(self, displayImage=False):
         #ISteamUser developer api reference url
         AvatarRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
