@@ -11,6 +11,9 @@ class getplayerstatus(object):
         self.steamid = steamid
         self.apiKey = apiKey
         
+        #base steam API summaries
+        self.baseRefURL = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
+        
         #Set vanity url to resolve
         self.vanityUrl = vanityUrl
         
