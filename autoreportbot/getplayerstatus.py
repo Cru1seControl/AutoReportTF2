@@ -26,7 +26,21 @@ class getplayerstatus(object):
     def APIKey(self):
         return self.apiKey
 
-    def ShowVanityMatches(self, setCustomName=False):
+    def PersonaState(self):
+        self.PersonaStates = {"0": "Private/Offline", "1": "Online", "2": "Busy", "3": "Away", "4": "Snooze", "5": "Looking To Trade", "6": "Looking To Play"}
+        PersonaStateRequest = requests.get(self.baseRefURL).content
+        
+        PersonaState = str(json.dumps(json.loads(PersonaStateRequest)["response"]["players"][0]["personastate"]).strip('\"'))
+
+        for values in self.PersonaStates:
+            if PersonaState in values:
+                if PersonaState == values:
+                    StateAsString = self.PersonaStates[values]
+
+        return str(StateAsString)
+    
+    
+    def ShowVanityMatches(self, setCustomName=False, showSummaries=False):
         BotTypes = ["g0tb0t", "g0tb0tt", "g0tb6t", "g0tb7t", "g0tbot", "g0t", "g0tbottt"]
         BotExists = True
         BotCount = 0
@@ -37,17 +51,37 @@ class getplayerstatus(object):
         if not setCustomName:
             for BotNumber in range(1, 21):
                 for botname in BotTypes:
-                    CustomBotId = "%s%s" % (botname, BotNumber) 
+                    self.CustomBotId = "%s%s" % (botname, BotNumber)
                 
-                    BotVanityRef = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=%s&vanityurl=%s" % (self.apiKey, CustomBotId)
+                    BotVanityRef = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=%s&vanityurl=%s" % (self.apiKey, self.CustomBotId)
                     try:
+                        #self.PersonaStates = {"0": "Private/Offline", "1": "Online", "2": "Busy", "3": "Away", "4": "Snooze", "5": "Looking To Trade", "6": "Looking To Play"}
+                        self.BotContent = json.dumps(json.loads(requests.get(BotVanityRef).content)["response"]["steamid"]).strip('\"')
+                        if showSummaries:
+                            pass
+                        elif showSummaries is False:
+                            print(self.CustomBotId, ":", self.BotContent)
+                        
+                        if showSummaries:
+                            #copy and pasted from PlayerSummary. Its 2:00 in the morning and it works!
+                            SummaryRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.BotContent)
+                            
+                            SummaryRequest = lambda KEY : json.dumps(json.loads(requests.get(SummaryRefUrl).content)["response"]["players"][0][KEY]).strip('\"')
+                            
+                            SteamID = SummaryRequest("steamid")
+                            PersonaState = SummaryRequest("personastate")
+                            PersonaName = SummaryRequest("personaname")
+                            ProfileCreation = SummaryRequest("timecreated")
+                            RealName = SummaryRequest("realname")
+                            
+                            StateAsString = self.PersonaState()
 
-                        BotContent = json.dumps(json.loads(requests.get(BotVanityRef).content)["response"]["steamid"]).strip('\"')
-                        print(CustomBotId, "|", BotContent)
-                    
-                    except KeyError:
+                            print("\n STEAMID: %s\n Persona Name: %s\n Real Name: %s\n Persona State: %s\n Date Created: %s" % (SteamID, PersonaName, RealName, StateAsString, datetime.fromtimestamp(int(ProfileCreation))))
+                            
+                    except Exception:
                         BotExists = False
-                        print("*")
+                        if not BotExists:
+                            pass
                         
     def ResolveVanityUrl(self, customVanity=None):
         if customVanity:
