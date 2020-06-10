@@ -65,7 +65,6 @@ class getplayerstatus(object):
                             print(self.CustomBotId, ":", self.BotContent)
                         
                         if showSummaries:
-                            #copy and pasted from PlayerSummary. Its 2:00 in the morning and it works!
                             SummaryRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.BotContent)
                             
                             SummaryRequest = lambda KEY : json.dumps(json.loads(requests.get(SummaryRefUrl).content)["response"]["players"][0][KEY]).strip('\"')
