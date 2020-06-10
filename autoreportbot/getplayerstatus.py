@@ -48,8 +48,7 @@ class getplayerstatus(object):
                     except KeyError:
                         BotExists = False
                         print("*")
-
-
+                        
     def ResolveVanityUrl(self, customVanity=None):
         if customVanity:
             VanityReferingUrl = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=%s&vanityurl=%s" % (self.apiKey, customVanity)
@@ -59,6 +58,27 @@ class getplayerstatus(object):
 
         VanityResponse = json.dumps(json.loads(VanityRequest.content)["response"]["steamid"]).strip('\"')
         return int(VanityResponse)
+
+    def PlayerSummary(self):
+        PersonaStates = {"0": "Private/Offline", "1": "Online", "2": "Busy", "3": "Away", "4": "Snooze", "5": "Looking To Trade", "6": "Looking To Play"}
+ 
+        SummaryRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
+        SummaryRequest = requests.get(SummaryRefUrl).content
+
+        base = json.dumps(json.loads(SummaryRequest)["response"]["players"][0])
+
+        SteamID = json.dumps(json.loads(SummaryRequest)["response"]["players"][0]["steamid"]).strip('\"')
+        PersonaState = str(json.dumps(json.loads(SummaryRequest)["response"]["players"][0]["personastate"]).strip('\"'))
+        PersonaName = json.dumps(json.loads(SummaryRequest)["response"]["players"][0]["personaname"]).strip('\"')
+        ProfileCreation = json.dumps(json.loads(SummaryRequest)["response"]["players"][0]["timecreated"]).strip('\"')
+        RealName = json.dumps(json.loads(SummaryRequest)["response"]["players"][0]["realname"]).strip('\"')
+
+        for values in PersonaStates:
+            if PersonaState in values:
+                if PersonaState == values:
+                    StateAsString = PersonaStates[values]
+
+        print("STEAMID: %s\n Persona Name: %s\n Real Name: %s\n Persona State: %s\n Date Created: %s" % (SteamID, PersonaName, RealName, StateAsString, datetime.fromtimestamp(int(ProfileCreation))))
 
     def GetPlayerAvatar(self, displayImage=False):
         #ISteamUser developer api reference url
