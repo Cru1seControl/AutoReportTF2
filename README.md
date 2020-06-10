@@ -11,4 +11,4 @@ The modules that AutoReportBot runs on are as follows:
 * requests
 * PIL (Python Image Library)
 
-For more detailed information visit [AutoReportBot and you!] (placeholder)
+For more detailed information visit [AutoReportBot and you!] (https://steamcommunity.com/sharedfiles/filedetails/?id=2124475472)
