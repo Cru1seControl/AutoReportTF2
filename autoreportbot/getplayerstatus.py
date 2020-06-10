@@ -91,3 +91,6 @@ class getplayerstatus(object):
         if displayImage is True:
             Avatar = Image.open(io.BytesIO(requests.get(AvatarRefUrl).content))
             Avatar.show()
+            
+        with io.BytesIO(requests.get(AvatarRefUrl).content) as imageBytes:
+            return imageBytes.read()
