@@ -11,6 +11,9 @@ class getplayerstatus(object):
         self.steamid = steamid
         self.apiKey = apiKey
         
+        #Persona states
+        self.PersonaStates = {"0": "Private/Offline", "1": "Online", "2": "Busy", "3": "Away", "4": "Snooze", "5": "Looking To Trade", "6": "Looking To Play"}
+        
         #base steam API summaries
         self.baseRefURL = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
         
@@ -30,14 +33,12 @@ class getplayerstatus(object):
         return self.apiKey
 
     def PersonaState(self):
-        self.PersonaStates = {"0": "Private/Offline", "1": "Online", "2": "Busy", "3": "Away", "4": "Snooze", "5": "Looking To Trade", "6": "Looking To Play"}
         PersonaStateRequest = requests.get(self.baseRefURL).content
-        
-        PersonaState = str(json.dumps(json.loads(PersonaStateRequest)["response"]["players"][0]["personastate"]).strip('\"'))
+        self.PersonaState = str(json.dumps(json.loads(PersonaStateRequest)["response"]["players"][0]["personastate"]).strip('\"'))
 
         for values in self.PersonaStates:
-            if PersonaState in values:
-                if PersonaState == values:
+            if self.PersonaState in values:
+                if self.PersonaState == values:
                     StateAsString = self.PersonaStates[values]
 
         return str(StateAsString)
@@ -58,25 +59,28 @@ class getplayerstatus(object):
                 
                     BotVanityRef = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=%s&vanityurl=%s" % (self.apiKey, self.CustomBotId)
                     try:
-                        self.BotContent = json.dumps(json.loads(requests.get(BotVanityRef).content)["response"]["steamid"]).strip('\"')
+                        BotContent = json.dumps(json.loads(requests.get(BotVanityRef).content)["response"]["steamid"]).strip('\"')
                         if showSummaries:
                             pass
                         elif showSummaries is False:
-                            print(self.CustomBotId, ":", self.BotContent)
+                            print(self.CustomBotId, ":", BotContent)
                         
                         if showSummaries:
-                            SummaryRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.BotContent)
-                            
+                            SummaryRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, BotContent)
                             SummaryRequest = lambda KEY : json.dumps(json.loads(requests.get(SummaryRefUrl).content)["response"]["players"][0][KEY]).strip('\"')
                             
                             SteamID = SummaryRequest("steamid")
                             PersonaState = SummaryRequest("personastate")
+                            
                             PersonaName = SummaryRequest("personaname")
                             ProfileCreation = SummaryRequest("timecreated")
                             RealName = SummaryRequest("realname")
-                            
-                            StateAsString = self.PersonaState()
 
+                            for values in self.PersonaStates:
+                                if PersonaState in values:
+                                    if PersonaState == values:
+                                        StateAsString = self.PersonaStates[values]
+                            
                             print("\n STEAMID: %s\n Persona Name: %s\n Real Name: %s\n Persona State: %s\n Date Created: %s" % (SteamID, PersonaName, RealName, StateAsString, datetime.fromtimestamp(int(ProfileCreation))))
                             
                     except Exception:
@@ -94,9 +98,7 @@ class getplayerstatus(object):
         VanityResponse = json.dumps(json.loads(VanityRequest.content)["response"]["steamid"]).strip('\"')
         return int(VanityResponse)
 
-    def PlayerSummary(self):
-        PersonaStates = {"0": "Private/Offline", "1": "Online", "2": "Busy", "3": "Away", "4": "Snooze", "5": "Looking To Trade", "6": "Looking To Play"}
- 
+def PlayerSummary(self):
         SummaryRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
         SummaryRequest = requests.get(SummaryRefUrl).content
 
@@ -108,10 +110,10 @@ class getplayerstatus(object):
         ProfileCreation = json.dumps(json.loads(SummaryRequest)["response"]["players"][0]["timecreated"]).strip('\"')
         RealName = json.dumps(json.loads(SummaryRequest)["response"]["players"][0]["realname"]).strip('\"')
 
-        for values in PersonaStates:
+        for values in self.PersonaStates:
             if PersonaState in values:
                 if PersonaState == values:
-                    StateAsString = PersonaStates[values]
+                    StateAsString = self.PersonaStates[values]
 
         print("STEAMID: %s\n Persona Name: %s\n Real Name: %s\n Persona State: %s\n Date Created: %s" % (SteamID, PersonaName, RealName, StateAsString, datetime.fromtimestamp(int(ProfileCreation))))
 
