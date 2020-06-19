@@ -128,7 +128,7 @@ def PlayerSummary(self):
 
             for steam in steamID3:
                 newSteamID = int(steam) + steam64Base
-                print("https://steamcommunity.com/id/" + str(newSteamID))
+                print("https://steamcommunity.com/profiles/" + str(newSteamID))
         
         
         
