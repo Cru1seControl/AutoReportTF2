@@ -117,6 +117,21 @@ def PlayerSummary(self):
 
         print("STEAMID: %s\n Persona Name: %s\n Real Name: %s\n Persona State: %s\n Date Created: %s" % (SteamID, PersonaName, RealName, StateAsString, datetime.fromtimestamp(int(ProfileCreation))))
 
+        
+    def SteamMuteList(self):
+        """Resolves steamID3 to steamID64 from voice_ban.dt and returns a community URL"""
+        with open("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Team Fortress 2\\tf\\voice_ban.dt", "rb") as muteList:
+            steam64Base = 76561197960265728
+
+            listCharsReplaced = muteList.read().replace(b"\x00", b"").replace(b"\x01", b"").decode().replace("[", "").replace("]", " ").replace("U:1:", "")
+            steamID3 = listCharsReplaced.split()
+
+            for steam in steamID3:
+                newSteamID = int(steam) + steam64Base
+                print("https://steamcommunity.com/id/" + str(newSteamID))
+        
+        
+        
     def GetPlayerAvatar(self, displayImage=False):
         #ISteamUser developer api reference url
         AvatarRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
