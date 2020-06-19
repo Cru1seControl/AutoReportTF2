@@ -27,12 +27,15 @@ class getplayerstatus(object):
 
 
     def SteamID(self):
+        """Return steamID64 set"""
         return self.steamid
 
     def APIKey(self):
+        """Return API key set"""
         return self.apiKey
 
     def PersonaState(self):
+        """Returns the current state of a profile"""
         PersonaStateRequest = requests.get(self.baseRefURL).content
         self.PersonaState = str(json.dumps(json.loads(PersonaStateRequest)["response"]["players"][0]["personastate"]).strip('\"'))
 
@@ -45,6 +48,7 @@ class getplayerstatus(object):
     
     
     def ShowVanityMatches(self, setCustomName=False, showSummaries=False):
+        """Brute forces vanity URL's with the given BotTypes with a random number assigned to each one"""
         BotTypes = ["g0tb0t", "g0tb0tt", "g0tb6t", "g0tb7t", "g0tbot", "g0t", "g0tbottt"]
         BotExists = True
         BotCount = 0
@@ -89,6 +93,7 @@ class getplayerstatus(object):
                             pass
                         
     def ResolveVanityUrl(self, customVanity=None):
+        """Resolve a steam vanity URL or custom URL to steamID64"""
         if customVanity:
             VanityReferingUrl = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=%s&vanityurl=%s" % (self.apiKey, customVanity)
         else:
@@ -99,6 +104,7 @@ class getplayerstatus(object):
         return int(VanityResponse)
 
 def PlayerSummary(self):
+        """Return a entire summary on a players steamID64"""
         SummaryRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
         SummaryRequest = requests.get(SummaryRefUrl).content
 
@@ -143,7 +149,7 @@ def PlayerSummary(self):
                 return dictionary
         
     def GetPlayerAvatar(self, displayImage=False):
-        #ISteamUser developer api reference url
+        """Get steam player avatar / profile image"""
         AvatarRefUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s" % (self.apiKey, self.steamid)
         AvatarRequest = requests.get(AvatarRefUrl)
 
