@@ -10,6 +10,9 @@ The Python3x.x & Steam API key can be found here:
 * requests
 
 
+# Consept
+The original idea for this program was to brute force steam vanity URL's or custom URL's looking for a pattern used by most MYG)T bots. I am still working on this consept and the AutoReport feature but now with voice_ban.dt file you can get bots by just muting them in game. The voice_ban.dt file will be updated after every match and the program will convert steamID3 to steamID64 and give a steam community URL. 
+
 # Functions / Usage
 ## PersonaState
 ```python
