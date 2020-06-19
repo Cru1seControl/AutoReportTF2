@@ -139,7 +139,6 @@ def PlayerSummary(self):
                     steamID3Saved = f"[U:1:{ID3}]"
                     steamID3List.append(steamID3Saved)
 
-
                 dictionary = {"botid": steamID3List}
                 return dictionary
         
