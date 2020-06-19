@@ -124,7 +124,7 @@ def PlayerSummary(self):
         print("STEAMID: %s\n Persona Name: %s\n Real Name: %s\n Persona State: %s\n Date Created: %s" % (SteamID, PersonaName, RealName, StateAsString, datetime.fromtimestamp(int(ProfileCreation))))
 
         
-    def SteamMuteList(self, json=False):
+    def SteamMuteList(self, jsonFormat=False):
         """Resolves steamID3 to steamID64 from voice_ban.dt and returns a community URL"""
         with open("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Team Fortress 2\\tf\\voice_ban.dt", "rb") as muteList:
             steam64Base = 76561197960265728
@@ -135,10 +135,10 @@ def PlayerSummary(self):
             for steam in steamID3:
                 newSteamID = int(steam) + steam64Base
                 communityURL = "https://steamcommunity.com/profiles/" + str(newSteamID)
-                if not json:
+                if not jsonFormat:
                     print(communityURL)
 
-            if json:
+            if jsonFormat:
                 steamID3List = []
 
                 for ID3 in steamID3:
@@ -146,7 +146,7 @@ def PlayerSummary(self):
                     steamID3List.append(steamID3Saved)
 
                 dictionary = {"botid": steamID3List}
-                return dictionary
+                return json.dumps(dictionary, indent=4)
         
     def GetPlayerAvatar(self, displayImage=False):
         """Get steam player avatar / profile image"""
